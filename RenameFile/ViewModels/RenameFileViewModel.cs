@@ -5,10 +5,14 @@ using RenameFile.Constants;
 using RenameFile.DataSources;
 using RenameFile.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -41,6 +45,14 @@ namespace RenameFile.ViewModels
         {
             get => this._extensions;
             set => this.SetProperty(ref this._extensions, value);
+        }
+
+        private string _sequence = string.Empty;
+
+        public string Sequence
+        {
+            get => this._sequence;
+            set => this.SetProperty(ref this._sequence, value);
         }
 
         private string _sequenceFormat = string.Empty;
@@ -77,10 +89,30 @@ namespace RenameFile.ViewModels
 
         public DelegateCommand RenameCommand { get; set; }
 
+        public DelegateCommand OpenDirectoryCommand { get; set; }
+
         public RenameFileViewModel()
         {
             //this.SaveConfig();
             this.LoadConfig();
+
+            // フォルダを選択
+            this.OpenDirectoryCommand = new DelegateCommand(
+                () =>
+                {
+                    var initialDirectory = Directory.Exists(this.DirectoryPath) ?
+                        this.DirectoryPath :
+                        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                    var dialog = new Microsoft.Win32.OpenFolderDialog()
+                    {
+                        InitialDirectory = initialDirectory,
+                        Multiselect = false,
+                    };
+
+                    if (dialog.ShowDialog() ?? false)
+                        this.DirectoryPath = dialog.FolderName;
+                });
 
             // ファイル名をリネーム
             this.RenameCommand = new DelegateCommand(
@@ -117,6 +149,7 @@ namespace RenameFile.ViewModels
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             this.DirectoryPath = config.AppSettings.Settings[nameof(this.DirectoryPath)].Value;
             this.FileNamePattern = config.AppSettings.Settings[nameof(this.FileNamePattern)].Value;
+            this.Sequence = config.AppSettings.Settings[nameof(this.Sequence)].Value;
             this.SequenceFormat = config.AppSettings.Settings[nameof(this.SequenceFormat)].Value;
             this.DatetimeFormat = config.AppSettings.Settings[nameof(this.DatetimeFormat)].Value;
             this.Extensions = config.AppSettings.Settings[nameof(this.Extensions)].Value;
@@ -127,6 +160,7 @@ namespace RenameFile.ViewModels
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config.AppSettings.Settings[nameof(this.DirectoryPath)].Value = this.DirectoryPath;
             config.AppSettings.Settings[nameof(this.FileNamePattern)].Value = this.FileNamePattern;
+            config.AppSettings.Settings[nameof(this.Sequence)].Value = this.Sequence;
             config.AppSettings.Settings[nameof(this.SequenceFormat)].Value = this.SequenceFormat;
             config.AppSettings.Settings[nameof(this.DatetimeFormat)].Value = this.DatetimeFormat;
             config.AppSettings.Settings[nameof(this.Extensions)].Value = this.Extensions;

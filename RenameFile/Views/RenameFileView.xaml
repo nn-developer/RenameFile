@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RenameFile.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:bh="clr-namespace:RenameFile.Behaviors"
+        xmlns:local="clr-namespace:RenameFile.Views"
         Title="RenameFileView"
         mc:Ignorable="d"
         Height="480" 
@@ -13,6 +15,7 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
+        FontSize="14"
         prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid
         Margin="8">
@@ -55,7 +58,7 @@
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
                         Text="{Binding Path=DirectoryPath, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button
                         Height="30"
@@ -64,7 +67,8 @@
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
                         HorizontalContentAlignment="Center"
-                        Margin="8,0,8,0"/>
+                        Margin="8,0,8,0"
+                        Command="{Binding Path=OpenDirectoryCommand}"/>
                 </StackPanel>
                 <Label
                     Grid.Row="1"
@@ -83,7 +87,7 @@
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Center"
                     HorizontalAlignment="Left"
-                    HorizontalContentAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
                     Text="{Binding Path=FileNamePattern, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label
                     Grid.Row="2"
@@ -102,7 +106,7 @@
                     VerticalAlignment="Stretch"
                     VerticalContentAlignment="Center"
                     HorizontalAlignment="Left"
-                    HorizontalContentAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
                     Text="{Binding Path=Extensions, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label
                     Grid.Row="3"
@@ -133,7 +137,20 @@
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Right"
+                        Margin="8,0,8,0"
+                        Text="{Binding Path=Sequence, UpdateSourceTrigger=PropertyChanged}">
+                        <i:Interaction.Behaviors>
+                            <bh:IntegerOnlyTextBoxBehavior/>
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox
+                        Height="30"
+                        Width="150"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Left"
                         Margin="8,0,8,0"
                         Text="{Binding Path=SequenceFormat, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
@@ -167,7 +184,7 @@
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
                         Margin="8,0,8,0"
                         Text="{Binding Path=DatetimeValue, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBox
@@ -176,7 +193,7 @@
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
                         Margin="8,0,8,0"
                         Text="{Binding Path=DatetimeFormat, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
@@ -234,7 +251,7 @@
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Left"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
                         IsReadOnly="False"
                         Text="{Binding Path=Example, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
